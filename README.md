@@ -9,6 +9,7 @@ QualysGuard map XML.
 Output:
 Live IPs found in maps but are not in subscription.
 
+<pre>
 usage: map_parse.py [-h] [-a ASSET_GROUP] [-c SUBSCRIBE_FROM_CSV] [-e EXCLUDE]
                     [-f FILE_IP_LIST] [-m MAP] [-s] [-v]
 
@@ -28,3 +29,4 @@ optional arguments:
   -m MAP, --map MAP     Map XML to find live not scannable IPs.
   -s, --subscribe       FUTURE: Automatically add IPs to subscription.
   -v, --debug           Outputs additional information to log.
+</pre>
