@@ -6,6 +6,7 @@ import datetime
 from collections import defaultdict
 import logging
 import os
+import qualysapi
 from lxml import objectify
 
 #
@@ -27,10 +28,12 @@ parser.add_argument('-f', '--file_ip_list',
 parser.add_argument('-m', '--map',
                     help = 'Map XML to find live not scannable IPs.')
 parser.add_argument('-s', '--subscribe', action = 'store_true',
-                    help = 'FUTURE: Automatically add IPs to subscription.')
+                    help = 'Automatically add IPs to subscription.')
 parser.add_argument('-v', '--debug', action = 'store_true',
                     help = 'Outputs additional information to log.')
-# Parse arguements.
+parser.add_argument('--config',
+                    help = 'Configuration for Qualys connector.')
+# Parse arguments.
 args = parser.parse_args()# Create log directory.
 # Validate input.
 if not (args.map or \
@@ -66,6 +69,7 @@ with open(args.map) as xml_file:
 tree = objectify.fromstring(xml_output)
 # Find live, not scannable IPs.
 count = 0
+subscribe_me = set()
 with open(args.file_ip_list, 'wb') as csvfile:
     csvwriter = csv.writer(csvfile,
                             quoting=csv.QUOTE_ALL)
@@ -103,7 +107,20 @@ with open(args.file_ip_list, 'wb') as csvfile:
         csvwriter.writerow([ip, hostname, netbios, os])
         # Increment number of hosts found.
         count += 1
+        # Store ip in set.
+        subscribe_me.add(ip)
 # All data stored. Print out to files.
 print 'Number of live, not scannable hosts found: %s' % str(count)
 print 'Host details successfully written to %s.' % args.file_ip_list
+# Subscribe IPs, if requested.
+if not args.subscribe:
+    exit()
+if c_args.config:
+    qgc = qualysapi.connect(c_args.config)
+else:
+    qgc = qualysapi.connect()
+# Combine IPs to comma-delimited string.
+formatted_ips_to_subscribe = ','.join(subscribe_me)
+# Subscribe IPs.
+qgc = qualysapi.connect('asset_ip.php',{'action': 'add', 'host_ips': formatted_ips_to_subscribe})
 exit()

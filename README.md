@@ -1,7 +1,7 @@
 qualysguard_vm_map_parse
 ========================
 
-Parse QualysGuard VM maps for live but not scannable IPs.
+Parse QualysGuard VM maps for live but not scannable IPs and subscribe them automatically.
 
 Input:
 QualysGuard map XML.
@@ -27,6 +27,6 @@ optional arguments:
   -f FILE_IP_LIST, --file_ip_list FILE_IP_LIST
                         CSV to output of live, not scannable IPs.
   -m MAP, --map MAP     Map XML to find live not scannable IPs.
-  -s, --subscribe       FUTURE: Automatically add IPs to subscription.
+  -s, --subscribe       Automatically add IPs to subscription.
   -v, --debug           Outputs additional information to log.
 </pre>
